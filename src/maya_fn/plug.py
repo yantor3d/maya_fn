@@ -3,13 +3,13 @@
 import six
 
 __all__ = [
-    'plug',
+    "plug",
 ]
 
 
 def plug(*args):
     """Return the plug built up from the given arguments.
-    
+
     Args:
         *args (str | int): Token(s) to build the plug name from.
 

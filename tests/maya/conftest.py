@@ -11,7 +11,8 @@ atexit.register(maya.standalone.uninitialize)
 
 from maya import cmds
 
-@pytest.fixture(scope='function')
+
+@pytest.fixture(scope="function")
 def new_scene():
     """Open a new scene before running this test."""
 

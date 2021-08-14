@@ -3,9 +3,10 @@
 from maya.api import OpenMaya
 
 __all__ = [
-    'get_dag_path',
-    'get_object',
+    "get_dag_path",
+    "get_object",
 ]
+
 
 def get_dag_path(obj):
     """Return the MDagPath of the given object.
