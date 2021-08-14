@@ -40,3 +40,23 @@ def test_get_depend_node_with_object_that_does_not_exist():
 def test_get_depend_node_with_invalid_type(value):
     with pytest.raises(ValueError):
         maya_fn.get_object(value)
+
+
+def test_get_plug():
+    """Given a valid plug, the function returns a valid MPlug."""
+
+    plug = maya_fn.get_plug("persp.message")
+
+    assert isinstance(plug, OpenMaya.MPlug), "Wrong object type returned"
+    assert not plug.isNull, "Null MPlug returned"
+    assert plug.name() == "persp.message", "Wrong object returned"
+
+
+def test_get_plug_errors():
+    """Given an invalid plug, the function raises an error."""
+
+    with pytest.raises(LookupError):
+        maya_fn.get_plug("persp.foobar")
+
+    with pytest.raises(TypeError):
+        maya_fn.get_plug("persp")

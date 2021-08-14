@@ -54,7 +54,7 @@ def get_name(dag_node):
     """
 
     # Split the full path name because partial path name may not be unique.
-    return maya_fn.api.get_dag_path(dag_node).fullPathName().split('|')[-1]
+    return maya_fn.api.get_dag_path(dag_node).fullPathName().split("|")[-1]
 
 
 def get_parent(dag_node):

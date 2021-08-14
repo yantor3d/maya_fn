@@ -2,9 +2,11 @@
 
 from maya.api import OpenMaya
 
+
 __all__ = [
     "get_dag_path",
     "get_object",
+    "get_plug",
 ]
 
 
@@ -45,6 +47,30 @@ def get_object(obj):
         ValueError: If the given object is not selectable.
     """
 
+    return _get_selection(obj).getDependNode(0)
+
+
+def get_plug(obj):
+    """Return the MPlug of the given plug.
+
+    Args:
+        obj (Any): A plug in the current Maya scene.
+
+    Returns:
+        maya.api.OpenMaya.MPlug
+
+    Raises:
+        LookupError: If the given object does not exist.
+        TypeError: If the given object is not a plug.
+        ValueError: If the given object is not selectable.
+    """
+
+    return _get_selection(obj).getPlug(0)
+
+
+def _get_selection(obj):
+    """Return a selection list for the given object."""
+
     sel = OpenMaya.MSelectionList()
 
     try:
@@ -59,4 +85,4 @@ def get_object(obj):
             )
         )
 
-    return sel.getDependNode(0)
+    return sel

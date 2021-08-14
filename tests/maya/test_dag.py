@@ -21,6 +21,7 @@ def test_get_children():
 
     assert set(actual) == set(expected), "get_children returned the wrong results"
 
+
 def test_get_full_path():
     """Given a valid DAG object, the function returns the its full name."""
 
@@ -41,12 +42,12 @@ def test_get_name():
     root = cmds.createNode("transform")
     child = cmds.createNode("transform", parent=root)
     child = cmds.createNode("transform", parent=child)
-    child = cmds.createNode("transform", name='foobar', parent=child)
-    child, = cmds.ls(child, long=True)
+    child = cmds.createNode("transform", name="foobar", parent=child)
+    (child,) = cmds.ls(child, long=True)
 
     cmds.duplicate(root)
 
-    expected = 'foobar'
+    expected = "foobar"
     actual = maya_fn.get_name(child)
 
     assert actual == expected, "get_name returned the wrong results"
