@@ -29,35 +29,34 @@ def test_get_plug(new_scene, args, expected):
     assert maya_fn.plug(*args) == expected
 
 
-
 def test_get_plug_array():
-    node = cmds.createNode('network')
-    root = maya_fn.plug(node, 'values')
+    node = cmds.createNode("network")
+    root = maya_fn.plug(node, "values")
 
-    cmds.addAttr(node, longName='values', multi=True)
+    cmds.addAttr(node, longName="values", multi=True)
     cmds.setAttr(maya_fn.plug(root, 0), 1.0)
     cmds.setAttr(maya_fn.plug(root, 1), 1.0)
     cmds.setAttr(maya_fn.plug(root, 3), 1.0)
 
     expected = [0, 1, 3]
-    actual = list(maya_fn.plug_indices(root))
+    actual = list(maya_fn.plug.indices(root))
 
-    assert actual == expected, 'plug_indices returned the wrong values'
+    assert actual == expected, "plug_indices returned the wrong values"
 
-    expected = ['network1.values[0]', 'network1.values[1]', 'network1.values[3]']
-    actual = list(maya_fn.plug_elements(root))
+    expected = ["network1.values[0]", "network1.values[1]", "network1.values[3]"]
+    actual = list(maya_fn.plug.elements(root))
 
-    assert actual == expected, 'plug_elements returned the wrong values'
+    assert actual == expected, "plug_elements returned the wrong values"
 
 
 def test_get_plug_array_errors():
-    node = cmds.createNode('network')
-    root = maya_fn.plug(node, 'values')
+    node = cmds.createNode("network")
+    root = maya_fn.plug(node, "values")
 
-    cmds.addAttr(node, longName='values')
+    cmds.addAttr(node, longName="values")
 
     with pytest.raises(TypeError):
-        list(maya_fn.plug_indices(root))
-    
+        list(maya_fn.plug.indices(root))
+
     with pytest.raises(TypeError):
-        list(maya_fn.plug_elements(root))
+        list(maya_fn.plug.elements(root))

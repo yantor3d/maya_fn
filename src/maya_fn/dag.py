@@ -1,19 +1,37 @@
 """DAG node utilities."""
 
+from maya import cmds
 from maya.api import OpenMaya
 
 import maya_fn.api
 
 __all__ = [
-    "get_children",
-    "get_full_path",
-    "get_name",
-    "get_parent",
-    "get_shapes",
+    "ancestors",
+    "children",
+    "descendents",
+    "full_path",
+    "name",
+    "parent",
+    "path",
+    "shapes",
+    "siblings",
 ]
 
 
-def get_children(dag_node):
+def ancestors(dag_node):
+    """Return the ancestors of the given dag node, depth first.
+
+    Args:
+        dag_node (str): DAG node in the current scene.
+
+    Returns:
+        list[str]
+    """
+
+    return list(_iter_parents(dag_node))[::-1]
+
+
+def children(dag_node):
     """Return the children transforms of the given node.
 
     Args:
@@ -30,7 +48,20 @@ def get_children(dag_node):
     ]
 
 
-def get_full_path(dag_node):
+def descendents(dag_node):
+    """Return the descendents of the given dag node, depth first.
+
+    Args:
+        dag_node (str): DAG node in the current scene.
+
+    Returns:
+        list[str]
+    """
+
+    raise NotImplementedError()
+
+
+def full_path(dag_node):
     """Return the full path of the given dag node.
 
     Args:
@@ -43,7 +74,7 @@ def get_full_path(dag_node):
     return maya_fn.api.get_dag_path(dag_node).fullPathName()
 
 
-def get_name(dag_node):
+def name(dag_node):
     """Return the name of the given dag node.
 
     Args:
@@ -57,7 +88,7 @@ def get_name(dag_node):
     return maya_fn.api.get_dag_path(dag_node).fullPathName().split("|")[-1]
 
 
-def get_parent(dag_node):
+def parent(dag_node):
     """Return the parent of the given dag node.
 
     Args:
@@ -73,7 +104,10 @@ def get_parent(dag_node):
     return dag_path.fullPathName() or None
 
 
-def get_shapes(dag_node):
+path = maya_fn.api.get_dag_path
+
+
+def shapes(dag_node):
     """Return the shape nodes for the given node.
 
     Args:
@@ -90,6 +124,30 @@ def get_shapes(dag_node):
     ]
 
 
+def siblings(dag_node):
+    """Return the siblings of the given dag node.
+
+    Args:
+        dag_node (str): DAG node in the current scene.
+
+    Returns:
+        list[str]
+    """
+
+    dag_path = path(dag_node)
+
+    _parent = parent(dag_node)
+
+    if not _parent:
+        _siblings = cmds.ls(assemblies=True, long=True)
+    else:
+        _siblings = [each.fullPathName() for each in _iter_children(_parent)]
+
+    _siblings.remove(dag_path.fullPathName())
+
+    return _siblings
+
+
 def _iter_children(dag_node):
     """Yield the children of the given node."""
 
@@ -97,3 +155,20 @@ def _iter_children(dag_node):
 
     for i in range(dag_path.childCount()):
         yield OpenMaya.MDagPath.getAPathTo(dag_path.child(i))
+
+
+def _iter_parents(dag_node):
+    """Yield the children of the given node."""
+
+    dag_path = maya_fn.api.get_dag_path(dag_node)
+
+    while True:
+        try:
+            dag_path = dag_path.pop()
+        except RuntimeError:
+            break
+
+        if dag_path.length():
+            yield dag_path.fullPathName()
+        else:
+            break

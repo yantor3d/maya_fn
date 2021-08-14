@@ -1,18 +1,16 @@
 """Maya Plug functions."""
 
+import inspect
 import six
 
-import maya_fn.api 
-
+import maya_fn.api
 
 __all__ = [
     "plug",
-    "plug_elements",
-    "plug_indices",
 ]
 
 
-def plug(*args):
+def make(*args):
     """Return the plug built up from the given arguments.
 
     Args:
@@ -35,9 +33,12 @@ def plug(*args):
     return ".".join(parts)
 
 
-def plug_elements(array_plug):
+make.__alias__ = "__call__"
+
+
+def elements(array_plug):
     """Yield the elements of the given array plug.
-    
+
     Args:
         array_plug (str): Path to an array plug.
 
@@ -57,9 +58,9 @@ def plug_elements(array_plug):
         yield _plug.elementByLogicalIndex(i).name()
 
 
-def plug_indices(array_plug):
+def indices(array_plug):
     """Yield the indices of the given array plug.
-    
+
     Args:
         array_plug (str): Path to an array plug.
 
@@ -77,3 +78,12 @@ def plug_indices(array_plug):
 
     for i in _plug.getExistingArrayAttributeIndices():
         yield i
+
+
+__functions__ = {
+    getattr(obj, "__alias__", obj.__name__): staticmethod(obj)
+    for obj in locals().values()
+    if inspect.isfunction(obj)
+}
+
+plug = type("plug", (), __functions__)()
