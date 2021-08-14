@@ -20,6 +20,8 @@ def test_get_ancestores():
 
     assert actual == expected
 
+    assert maya_fn.dag.ancestors(x) == []
+
 
 def test_get_children():
     """Given a valid DAG object, the function returns the full path of its children."""
@@ -34,6 +36,22 @@ def test_get_children():
     actual = maya_fn.dag.children(root)
 
     assert set(actual) == set(expected), "get_children returned the wrong results"
+
+
+def test_get_descendents():
+    """Given a valid DAG object, the function returns the full path of its descendents."""
+
+    cmds.file(new=True, force=True)
+
+    x = cmds.createNode("transform", name="x")
+    a = cmds.createNode("transform", name="a", parent=x)
+    b = cmds.createNode("transform", name="b", parent=a)
+    c = cmds.createNode("transform", name="c", parent=b)
+
+    expected = sorted(cmds.ls([a, b, c], long=True), key=lambda n: n.count("|"))
+    actual = list(maya_fn.dag.descendents(x))
+
+    assert actual == expected, "descendents returned the wrong results"
 
 
 def test_get_full_path():
@@ -112,3 +130,5 @@ def test_get_siblings():
 
     assert actual == expected
     assert maya_fn.dag.siblings(z) == []
+
+    assert set(maya_fn.dag.siblings(root)) == {"|persp", "|top", "|front", "|side"}

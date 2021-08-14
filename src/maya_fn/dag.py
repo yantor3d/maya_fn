@@ -49,16 +49,20 @@ def children(dag_node):
 
 
 def descendents(dag_node):
-    """Return the descendents of the given dag node, depth first.
+    """Yield the descendents of the given dag node, depth first.
 
     Args:
         dag_node (str): DAG node in the current scene.
 
-    Returns:
-        list[str]
+    Yields:
+        str
     """
 
-    raise NotImplementedError()
+    for child in children(dag_node):
+        yield child
+
+        for each in descendents(child):
+            yield each
 
 
 def full_path(dag_node):
@@ -162,11 +166,8 @@ def _iter_parents(dag_node):
 
     dag_path = maya_fn.api.get_dag_path(dag_node)
 
-    while True:
-        try:
-            dag_path = dag_path.pop()
-        except RuntimeError:
-            break
+    while dag_path.length():
+        dag_path = dag_path.pop()
 
         if dag_path.length():
             yield dag_path.fullPathName()
