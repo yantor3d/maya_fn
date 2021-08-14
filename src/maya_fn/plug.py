@@ -33,14 +33,11 @@ def make(*args):
     return ".".join(parts)
 
 
-make.__alias__ = "__call__"
-
-
-def elements(array_plug):
+def elements(plug):
     """Yield the elements of the given array plug.
 
     Args:
-        array_plug (str): Path to an array plug.
+        plug (str): Path to an array plug.
 
     Yields:
         str
@@ -49,20 +46,17 @@ def elements(array_plug):
         TypeError: If the given plug is not an array.
     """
 
-    _plug = maya_fn.api.get_plug(array_plug)
+    plug = _get_array_plug(plug)
 
-    if not _plug.isArray:
-        raise TypeError("'{}' is not an array plug.".format(_plug.name()))
-
-    for i in _plug.getExistingArrayAttributeIndices():
-        yield _plug.elementByLogicalIndex(i).name()
+    for i in plug.getExistingArrayAttributeIndices():
+        yield plug.elementByLogicalIndex(i).name()
 
 
-def indices(array_plug):
+def indices(plug):
     """Yield the indices of the given array plug.
 
     Args:
-        array_plug (str): Path to an array plug.
+        plug (str): Path to an array plug.
 
     Yields:
         int
@@ -71,19 +65,30 @@ def indices(array_plug):
         TypeError: If the given plug is not an array.
     """
 
-    _plug = maya_fn.api.get_plug(array_plug)
+    plug = _get_array_plug(plug)
 
-    if not _plug.isArray:
-        raise TypeError("'{}' is not an array plug.".format(_plug.name()))
-
-    for i in _plug.getExistingArrayAttributeIndices():
+    for i in plug.getExistingArrayAttributeIndices():
         yield i
 
 
-__functions__ = {
-    getattr(obj, "__alias__", obj.__name__): staticmethod(obj)
-    for obj in locals().values()
-    if inspect.isfunction(obj)
-}
+def _get_array_plug(plug):
+    """Return the given array plug."""
+
+    plug = maya_fn.api.get_plug(plug)
+
+    if not plug.isArray:
+        raise TypeError("'{}' is not an array plug.".format(plug.name()))
+
+    return plug
+
+
+__functions__ = dict(
+    __call__=staticmethod(make),
+    **{
+        obj.__name__: staticmethod(obj)
+        for obj in locals().values()
+        if inspect.isfunction(obj)
+    }
+)
 
 plug = type("plug", (), __functions__)()
