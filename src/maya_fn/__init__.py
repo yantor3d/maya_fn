@@ -7,8 +7,7 @@ __author__ = "Ryan Rorter"
 __version__ = "0.0.1"
 __license__ = "MIT"
 
-import attr  # noqa
-import dag  # noqa
+import maya_fn.node as node  # noqa
+import maya_fn.dag as dag  # noqa
 
-from api import *  # noqa
-from plug import *  # noqa
+from maya_fn.plug import plug  # noqa

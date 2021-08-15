@@ -56,6 +56,23 @@ def make(*args):
     return ".".join(parts)
 
 
+def destinations(plug):
+    """Return the outputs of the given plug.
+
+    Args:
+        plug (str): Path to an plug.
+
+    Returns:
+        list[str]
+    """
+
+    plug = maya_fn.api.get_plug(plug)
+
+    plugs = plug.connectedTo(False, True)
+
+    return cmds.ls([p.name() for p in plugs], long=True)
+
+
 def elements(plug):
     """Yield the elements of the given array plug.
 
@@ -75,21 +92,7 @@ def elements(plug):
         yield plug.elementByLogicalIndex(i).name()
 
 
-def destinations(plug):
-    """Return the outputs of the given plug.
-
-    Args:
-        plug (str): Path to an plug.
-
-    Returns:
-        list[str]
-    """
-
-    plug = maya_fn.api.get_plug(plug)
-
-    plugs = plug.connectedTo(False, True)
-
-    return cmds.ls([p.name() for p in plugs], long=True)
+get = maya_fn.api.get_plug
 
 
 def indices(plug):

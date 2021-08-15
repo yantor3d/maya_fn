@@ -72,6 +72,10 @@ def test_get_connections():
     src = "|persp.visibility"
     dst = maya_fn.plug(node, "visibility")
 
+    expected = None
+    actual = maya_fn.plug.source(dst)
+    assert actual == expected, "plug_source returned the wrong values"
+
     cmds.connectAttr(src, dst)
 
     expected = src
@@ -85,13 +89,30 @@ def test_get_connections():
     assert actual == expected, "plug_destinations returned the wrong values"
 
 
-def test_get_parts():
+def test_get_parts_on_dag_node():
     node = cmds.createNode("transform")
     node = cmds.createNode("transform", parent=node)
     node = maya_fn.dag.full_path(node)
 
-    plug = maya_fn.attr.add(node, ln="fizz", at="compound", nc=1)
-    plug = maya_fn.attr.add(node, ln="buzz", p="fizz")
+    plug = maya_fn.node.add_attr(node, ln="fizz", at="compound", nc=1)
+    plug = maya_fn.node.add_attr(node, ln="buzz", p="fizz")
+
+    expected = node
+    actual = maya_fn.plug.node(plug)
+
+    assert expected == actual
+
+    expected = "fizz.buzz"
+    actual = maya_fn.plug.attr(plug)
+
+    assert expected == actual
+
+
+def test_get_parts_on_dg_node():
+    node = cmds.createNode("network")
+
+    plug = maya_fn.node.add_attr(node, ln="fizz", at="compound", nc=1)
+    plug = maya_fn.node.add_attr(node, ln="buzz", p="fizz")
 
     expected = node
     actual = maya_fn.plug.node(plug)

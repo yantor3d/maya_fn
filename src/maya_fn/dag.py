@@ -78,6 +78,9 @@ def full_path(dag_node):
     return maya_fn.api.get_dag_path(dag_node).fullPathName()
 
 
+get = maya_fn.api.get_dag_path
+
+
 def name(dag_node):
     """Return the name of the given dag node.
 

@@ -12,7 +12,15 @@ def test_add_attr():
     node = maya_fn.dag.full_path(node)
 
     expected = maya_fn.plug(node, "foobar")
-    actual = maya_fn.attr.add(node, ln="foobar")
+    actual = maya_fn.node.add_attr(node, ln="foobar")
+
+    assert expected == actual
+
+    with pytest.raises(ValueError):
+        maya_fn.node.add_attr(node)
+
+    expected = ["|persp.foobar", "|front.foobar", "|top.foobar", "|side.foobar"]
+    actual = maya_fn.node.add_attr("persp", "front", "top", "side", ln="foobar")
 
     assert expected == actual
 
@@ -23,7 +31,7 @@ def test_add_compound_attr():
 
     expected = maya_fn.plug(node, "fizz", "buzz")
 
-    maya_fn.attr.add(node, ln="fizz", at="compound", nc=1)
-    actual = maya_fn.attr.add(node, ln="buzz", p="fizz")
+    maya_fn.node.add_attr(node, ln="fizz", at="compound", nc=1)
+    actual = maya_fn.node.add_attr(node, ln="buzz", p="fizz")
 
     assert expected == actual

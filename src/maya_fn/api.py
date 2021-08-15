@@ -30,7 +30,7 @@ def get_dag_path(obj):
     try:
         return OpenMaya.MDagPath.getAPathTo(dag)
     except RuntimeError:
-        raise ValueError("Object '{}' is not a DAG node.".format(obj))
+        raise TypeError("Object '{}' is not a DAG node.".format(obj))
 
 
 def get_object(obj):
@@ -68,7 +68,7 @@ def get_plug(obj):
     try:
         return _get_selection(obj).getPlug(0)
     except TypeError:
-        raise ValueError("Object '{}' is not a plug.".format(obj))
+        raise TypeError("Object '{}' is not a plug.".format(obj))
 
 
 def _get_selection(obj):

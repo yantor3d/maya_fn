@@ -5,12 +5,14 @@ from maya import cmds
 import maya_fn.plug
 
 __all__ = [
-    "add",
+    "add_attr",
 ]
 
 
-def add(*args, **kwargs):
+def add_attr(*args, **kwargs):
     """Add an attribute to the node(s) and return the new plug(s).
+
+    See cmds.addAttr for a list of flags (kwargs).
 
     Returns:
         str | list[str]
@@ -33,3 +35,6 @@ def add(*args, **kwargs):
         return plugs[0]
     else:
         return plugs
+
+
+get = maya_fn.api.get_object
