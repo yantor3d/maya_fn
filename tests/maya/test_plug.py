@@ -60,3 +60,26 @@ def test_get_plug_array_errors():
 
     with pytest.raises(TypeError):
         list(maya_fn.plug.elements(root))
+
+
+def test_get_connections():
+    node = cmds.createNode("transform")
+    node = cmds.createNode("transform", parent=node)
+    node = cmds.createNode("transform", parent=node)
+
+    node = maya_fn.dag.full_path(node)
+
+    src = "|persp.visibility"
+    dst = maya_fn.plug(node, "visibility")
+
+    cmds.connectAttr(src, dst)
+
+    expected = src
+    actual = maya_fn.plug.source(dst)
+
+    assert actual == expected, "plug_source returned the wrong values"
+
+    expected = [dst]
+    actual = maya_fn.plug.destinations(src)
+
+    assert actual == expected, "plug_destinations returned the wrong values"

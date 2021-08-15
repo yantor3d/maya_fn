@@ -3,6 +3,8 @@
 import inspect
 import six
 
+from maya import cmds
+
 import maya_fn.api
 
 __all__ = [
@@ -52,6 +54,23 @@ def elements(plug):
         yield plug.elementByLogicalIndex(i).name()
 
 
+def destinations(plug):
+    """Return the outputs of the given plug.
+
+    Args:
+        plug (str): Path to an plug.
+
+    Returns:
+        list[str]
+    """
+
+    plug = maya_fn.api.get_plug(plug)
+
+    plugs = plug.connectedTo(False, True)
+
+    return cmds.ls([p.name() for p in plugs], long=True)
+
+
 def indices(plug):
     """Yield the indices of the given array plug.
 
@@ -69,6 +88,26 @@ def indices(plug):
 
     for i in plug.getExistingArrayAttributeIndices():
         yield i
+
+
+def source(plug):
+    """Return the source of the given plug.
+
+    Args:
+        plug (str): Path to an plug.
+
+    Returns:
+        str | None
+    """
+
+    plug = maya_fn.api.get_plug(plug)
+
+    plugs = plug.connectedTo(True, False)
+
+    if plugs:
+        return cmds.ls(plugs[0].name(), long=True)[0]
+    else:
+        return None
 
 
 def _get_array_plug(plug):
