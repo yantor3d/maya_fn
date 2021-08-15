@@ -65,7 +65,10 @@ def get_plug(obj):
         ValueError: If the given object is not selectable.
     """
 
-    return _get_selection(obj).getPlug(0)
+    try:
+        return _get_selection(obj).getPlug(0)
+    except TypeError:
+        raise ValueError("Object '{}' is not a plug.".format(obj))
 
 
 def _get_selection(obj):

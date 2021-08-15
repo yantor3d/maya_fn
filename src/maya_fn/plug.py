@@ -4,12 +4,33 @@ import inspect
 import six
 
 from maya import cmds
+from maya.api import OpenMaya
 
 import maya_fn.api
 
 __all__ = [
     "plug",
 ]
+
+
+def attr(plug):
+    """Return the attribute of the given plug.
+
+    Args:
+        plug (str): Path to an plug.
+
+    Returns:
+        str
+    """
+
+    plug = maya_fn.api.get_plug(plug)
+
+    return plug.partialName(
+        includeNonMandatoryIndices=True,
+        includeInstancedIndices=True,
+        useFullAttributePath=True,
+        useLongNames=True,
+    )
 
 
 def make(*args):
@@ -90,6 +111,25 @@ def indices(plug):
         yield i
 
 
+def node(plug):
+    """Return the node of the given plug.
+
+    Args:
+        plug (str): Path to an plug.
+
+    Returns:
+        str
+    """
+
+    plug = maya_fn.api.get_plug(plug)
+    obj = plug.node()
+
+    if obj.hasFn(OpenMaya.MFn.kDagNode):
+        return OpenMaya.MFnDagNode(obj).fullPathName()
+    else:
+        return OpenMaya.MFnDependencyNode(obj).name()
+
+
 def source(plug):
     """Return the source of the given plug.
 
@@ -105,7 +145,7 @@ def source(plug):
     plugs = plug.connectedTo(True, False)
 
     if plugs:
-        return cmds.ls(plugs[0].name(), long=True)[0]
+        return cmds.ls(plugs, long=True)[0]
     else:
         return None
 

@@ -7,6 +7,7 @@ __author__ = "Ryan Rorter"
 __version__ = "0.0.1"
 __license__ = "MIT"
 
+import attr  # noqa
 import dag  # noqa
 
 from api import *  # noqa

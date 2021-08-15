@@ -83,3 +83,22 @@ def test_get_connections():
     actual = maya_fn.plug.destinations(src)
 
     assert actual == expected, "plug_destinations returned the wrong values"
+
+
+def test_get_parts():
+    node = cmds.createNode("transform")
+    node = cmds.createNode("transform", parent=node)
+    node = maya_fn.dag.full_path(node)
+
+    plug = maya_fn.attr.add(node, ln="fizz", at="compound", nc=1)
+    plug = maya_fn.attr.add(node, ln="buzz", p="fizz")
+
+    expected = node
+    actual = maya_fn.plug.node(plug)
+
+    assert expected == actual
+
+    expected = "fizz.buzz"
+    actual = maya_fn.plug.attr(plug)
+
+    assert expected == actual
