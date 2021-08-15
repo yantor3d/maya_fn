@@ -1,4 +1,4 @@
-# Functional Set (maya_fn)
+# Maya FunctionSet (maya_fn)
 A package that decompose core maya.cmds and maya.api features to a set of simple functions. 
 
 # Tests
