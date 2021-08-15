@@ -1,5 +1,5 @@
-# Maya Pocket Tools (maya_fn)
-A set of wrappers around a set of maya.cmds and maya.api behaviors. 
+# Functional Set (maya_fn)
+A package that decompose core maya.cmds and maya.api features to a set of simple functions. 
 
 # Tests
 The recommended approach for running tests is to setup a virtual environment. Edit the `activate.bat` script to include the `/src` directory and set a `MAYA_LOCATION` environment variable, as shown below.
