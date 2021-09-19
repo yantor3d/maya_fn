@@ -6,7 +6,13 @@ import maya_fn.plug
 
 __all__ = [
     "add_attr",
+    "of_type",
 ]
+
+def of_type(nodes, node_type):
+    """Yield the nodes of the given type."""
+
+    return cmds.ls(list(nodes), type=node_type, long=True)
 
 
 def add_attr(*args, **kwargs):
