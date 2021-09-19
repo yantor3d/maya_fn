@@ -10,4 +10,14 @@ __license__ = "MIT"
 import maya_fn.node as node  # noqa
 import maya_fn.dag as dag  # noqa
 
-from maya_fn.plug import plug  # noqa
+def undoable(name):
+    def wrapper(func):
+        @functools.wraps(func)
+        def wrapped(*args, **kwargs):
+            cmds.undoInfo(chunkName=name, openChunk=True)
+            try:
+                return func(*args, **kwargs)
+            finally:
+                cmds.undoInfo(closeChunk=True)
+        return wrapped 
+    return wrapper
