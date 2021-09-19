@@ -200,7 +200,7 @@ def _get_array_plug(plug):
 
 
 __functions__ = dict(
-    __call__ = staticmethod(make),
+    __call__=staticmethod(make),
     **{
         obj.__name__: staticmethod(obj)
         for obj in locals().values()

@@ -34,7 +34,7 @@ def ancestors(dag_node):
 def child(dag_node, dag_name):
     """Return the child of the given dag node."""
 
-    return dag_node + '|' + dag_name
+    return dag_node + "|" + dag_name
 
 
 def children(dag_node):

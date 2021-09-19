@@ -19,6 +19,8 @@ __license__ = "MIT"
 
 
 def undoable(name):
+    """Create an undo chunk every time the decorated function is called."""
+
     def wrapper(func):
         @functools.wraps(func)
         def wrapped(*args, **kwargs):
@@ -27,5 +29,7 @@ def undoable(name):
                 return func(*args, **kwargs)
             finally:
                 cmds.undoInfo(closeChunk=True)
-        return wrapped 
+
+        return wrapped
+
     return wrapper

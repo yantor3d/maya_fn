@@ -9,6 +9,7 @@ __all__ = [
     "of_type",
 ]
 
+
 def of_type(nodes, node_type):
     """Yield the nodes of the given type."""
 
