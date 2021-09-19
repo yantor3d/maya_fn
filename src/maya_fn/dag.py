@@ -31,6 +31,12 @@ def ancestors(dag_node):
     return list(_iter_parents(dag_node))[::-1]
 
 
+def child(dag_node, dag_name):
+    """Return the child of the given dag node."""
+
+    return dag_node + '|' + dag_name
+
+
 def children(dag_node):
     """Return the children transforms of the given node.
 
@@ -72,7 +78,7 @@ def full_path(dag_node):
         dag_node (str): DAG node in the current scene.
 
     Returns:
-        list[str]
+        str
     """
 
     return maya_fn.api.get_dag_path(dag_node).fullPathName()
@@ -88,7 +94,7 @@ def name(dag_node):
         dag_node (str): DAG node in the current scene.
 
     Returns:
-        list[str]
+        str
     """
 
     # Split the full path name because partial path name may not be unique.
@@ -109,6 +115,19 @@ def parent(dag_node):
     dag_path.pop()
 
     return dag_path.fullPathName() or None
+
+
+def partial_path(dag_node):
+    """Return the partial path of the given dag node.
+
+    Args:
+        dag_node (str): DAG node in the current scene.
+
+    Returns:
+        list[str]
+    """
+
+    return maya_fn.api.get_dag_path(dag_node).partialPathName()
 
 
 path = maya_fn.api.get_dag_path
